@@ -39,6 +39,34 @@ namespace NetFramework.Controllers
             }
             return productos;
         }
+
+        IEnumerable<Producto> productosByNombre(string nombre)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand("exec sp_GetProductosByNombre @prmStrNombre", connection);
+                cmd.Parameters.AddWithValue("@prmStrNombre", nombre);
+                connection.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    productos.Add(new Producto()
+                    {
+                        idProducto = reader.GetInt32(0),
+                        nombreProducto = reader.GetString(1),
+                        nombreCategoria = reader.GetString(2),
+                        precioUnitario = reader.GetDecimal(3),
+                        stock = reader.GetInt32(4)
+                    });
+                }
+                reader.Close();
+                connection.Close();
+            }
+            return productos;
+        }
         // GET: Producto
         public ActionResult Listado()
         {
@@ -54,7 +82,23 @@ namespace NetFramework.Controllers
 
             ViewBag.pagina = pagina;
             ViewBag.numPaginas = numPaginas;
+
             return View(productos().Skip(pagina*filas).Take(filas));
+        }
+
+        public ActionResult SearchByName(int pagina = 0, string nombre = "")
+        {
+            IEnumerable<Producto> productosTmp = productosByNombre(nombre);
+            int numProductos = productosTmp.Count();
+            int filas = 3;
+
+            int numPaginas = numProductos % filas == 0 ? numProductos / filas : (numProductos / filas + 1);
+
+            ViewBag.pagina = pagina;
+            ViewBag.numPaginas = numPaginas;
+            ViewBag.nombre = nombre;
+
+            return View(productosTmp.Skip(pagina * filas).Take(filas));
         }
     }
 }

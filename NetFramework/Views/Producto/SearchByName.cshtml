@@ -1,11 +1,18 @@
 ﻿@model IEnumerable<NetFramework.Models.Producto>
 
 @{
-    ViewBag.Title = "Paginacion";
+    ViewBag.Title = "SearchByName";
 }
 
-<h2>Paginacion</h2>
-
+<h2>SearchByName</h2>
+<div>
+    @using (Html.BeginForm("SearchByName"))
+            {
+                <em>Nombre del producto: </em>
+                @Html.TextBox("nombre", "")
+                <button>Buscar</button>
+            }
+</div>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -62,8 +69,8 @@
 
 </table>
 <div>
-    @for(int i = 0; i < ViewBag.numPaginas; i++)
-            {
-                @Html.ActionLink((i + 1).ToString(), "Paginacion", new { pagina = i }, new { @class = "btn btn-default" });
-            }
+    @for (int i = 0; i < ViewBag.numPaginas; i++)
+    {
+        @Html.ActionLink((i + 1).ToString(), "SearchByName", new { pagina = i, nombre = ViewBag.nombre }, new { @class = "btn btn-default" });
+    }
 </div>

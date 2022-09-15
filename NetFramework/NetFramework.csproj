@@ -166,6 +166,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Producto\Listado.cshtml" />
     <Content Include="Views\Producto\Paginacion.cshtml" />
+    <Content Include="Views\Producto\SearchByName.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
