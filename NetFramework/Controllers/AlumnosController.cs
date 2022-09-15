@@ -28,9 +28,9 @@ namespace NetFramework.Controllers
             {
                 alumnos.Add(new Alumno()
                 {
-                    IdAlumno = dr.GetString(0),
-                    Apellidos = dr.GetString(1),
-                    Nombres = dr.GetString(2),
+                    //IdAlumno = dr.GetString(0),
+                    //Apellidos = dr.GetString(1),
+                    //Nombres = dr.GetString(2),
                     Edad = dr.GetInt16(3),
                     Sexo = dr.GetString(4),
 
