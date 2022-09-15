@@ -44,5 +44,17 @@ namespace NetFramework.Controllers
         {
             return View(productos());
         }
+
+        public ActionResult Paginacion(int pagina = 0)
+        {
+            int numProductos = productos().Count();
+            int filas = 3;
+            
+            int numPaginas = numProductos % filas == 0 ? numProductos/filas : (numProductos/filas + 1);
+
+            ViewBag.pagina = pagina;
+            ViewBag.numPaginas = numPaginas;
+            return View(productos().Skip(pagina*filas).Take(filas));
+        }
     }
 }
