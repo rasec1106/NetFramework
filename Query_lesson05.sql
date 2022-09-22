@@ -66,3 +66,69 @@ values
 	('KEVIN', 'ESPEJO ALAYO', 'AV. LARCO 488', 'kespejo@gmail.com', 1, 1, 0, 'FPERALTA', GETDATE()),
 	('JUAN CARLOS', 'CARDENAS ROJAS', 'CALLE MAGNOLIAS 289', 'jcardenas@gmail.com', 1, 1, 0, 'FPERALTA', GETDATE())
 GO
+
+CREATE OR ALTER PROCEDURE sp_GetPaises
+AS
+BEGIN
+	SELECT idPais, nombre
+	FROM PAIS
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_GetSupervisores
+AS
+BEGIN
+	SELECT idSupervisor, nombre, apellidos, isnull(direccion, '') as direccion, email, idPais
+	FROM SUPERVISOR
+	WHERE eliminado = 0
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_InsertSupervisor
+	@prmstrNombre VARCHAR(200),
+	@prmstrApellidos VARCHAR(200),
+	@prmstrDireccion VARCHAR(255) = NULL,
+	@prmstrEmail VARCHAR(255),
+	@prmintIdPais INT
+AS
+BEGIN
+	INSERT INTO SUPERVISOR (nombre, apellidos, direccion, email, idPais, activo, eliminado, usuarioRegistro, fechaRegistro)
+	VALUES(@prmstrNombre, @prmstrApellidos, @prmstrDireccion, @prmstrEmail, @prmintIdPais, 1, 0, 'ADMINISTRADOR', GETDATE())
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_UpdateSupervisor
+	@prmintIdSupervisor INT,
+	@prmstrNombre VARCHAR(200),
+	@prmstrApellidos VARCHAR(200),
+	@prmstrDireccion VARCHAR(255),
+	@prmstrEmail VARCHAR(255),
+	@prmintIdPais INT
+AS
+BEGIN
+	UPDATE SUPERVISOR
+	SET
+		nombre = @prmstrNombre,
+		apellidos = @prmstrApellidos,
+		direccion = @prmstrDireccion,
+		email = @prmstrEmail,
+		idPais = @prmintIdPais,
+		usuarioModificacion = 'ADMINISTRADOR',
+		fechaModificacion = getdate()
+	WHERE idSupervisor = @prmintIdSupervisor
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_DeleteSupervisor
+	@prmintIdSupervisor INT
+AS
+BEGIN
+	UPDATE SUPERVISOR
+	SET
+		eliminado = 1,
+		usuarioEliminacion = 'ADMINISTRADOR',
+		fechaEliminacion = GETDATE()
+	WHERE idSupervisor = @prmintIdSupervisor
+	--DELETE FROM SUPERVISOR WHERE idSupervisor = @prmintIdSupervisor
+END
+GO

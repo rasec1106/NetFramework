@@ -73,7 +73,7 @@ namespace NetFramework.Controllers
         // GET: Negocios
         public ActionResult Index()
         {
-            return View();
+            return View(supervisores());
         }
     }
 }
