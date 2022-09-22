@@ -75,5 +75,46 @@ namespace NetFramework.Controllers
         {
             return View(supervisores());
         }
+        public ActionResult Create()
+        {
+            ViewBag.paises = new SelectList(paises(), "idPais", "nombrePais", "");
+            return View(new Supervisor());
+        }
+
+        [HttpPost]
+        public ActionResult Create(Supervisor supervisor)
+        {
+            ViewBag.paises = new SelectList(paises(), "idPais", "nombrePais", "");
+            if (!ModelState.IsValid)
+            {
+                return View(supervisor);                
+            }
+            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString);
+            try
+            {
+                SqlCommand cmd = new SqlCommand("sp_InsertSupervisor", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@prmstrNombre", supervisor.nombre);
+                cmd.Parameters.AddWithValue("@prmstrApellidos", supervisor.apellidos);
+                cmd.Parameters.AddWithValue("@prmstrDireccion", supervisor.direccion);
+                cmd.Parameters.AddWithValue("@prmstrEmail", supervisor.email);
+                cmd.Parameters.AddWithValue("@prmintIdPais", supervisor.idPais);
+
+                connection.Open();
+                // SqlDataReader dr = cmd.ExecuteReader();
+                int cantidadActualizada = cmd.ExecuteNonQuery();
+                ViewBag.mensaje = $"Se ha insertado {cantidadActualizada} registro.";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.mensaje = ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+              
+            return View(supervisor);
+        }
     }
 }
