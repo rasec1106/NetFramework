@@ -1,0 +1,81 @@
+﻿@model IEnumerable<NetFramework.Models.PedidoVenta>
+
+@{
+    ViewBag.Title = "GetPedidosVentaPorFechas";
+}
+
+<h2>Buscar Por Fechas</h2>
+<div>
+    @using (Html.BeginForm("GetPedidosVentaPorFechas"))
+    {
+        <em>Fecha Inicio:</em>
+        @Html.TextBox("fechaInicio","{0:yyyy-MM-dd}", new { type = "date"});
+        <em>Fecha Fin:</em>
+        @Html.TextBox("fechaFin","{0:yyyy-MM-dd}", new { type = "date" });
+        <button>Buscar</button>
+    }
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.idPedidoVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.codigo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaEmision)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.idCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.razonSocial)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.total)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.idPedidoVenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.codigo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaEmision)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.idCliente)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.razonSocial)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.total)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>
+<div>
+    @for(int i=0; i< ViewBag.numPaginas; i++)
+            {
+                @Html.ActionLink((i + 1).ToString(), "GetPedidosVentaPorFechas",
+               new {pagina= i, fechaInicio = ViewBag.fechaInicio, fechaFin = ViewBag.fechaFin},
+               new {@class = ViewBag.pagina == i?"btn btn-primary":"btn btn-default"});
+            }
+</div>
